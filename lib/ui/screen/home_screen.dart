@@ -106,98 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
             visible: contactList.length < 6,
             child: FloatingActionButton(
               onPressed: () {
-                showModalBottomSheet(
-                  backgroundColor: AppColors.backgroundColor,
-                  context: context,
-                  isScrollControlled: true,
-                  useSafeArea: true,
-                  builder: (context) {
-                    return SingleChildScrollView(
-                      child: StatefulBuilder(
-                        builder: (context, setModalState) {
-                          return Container(
-                            margin: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).viewInsets.bottom,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              vertical: height * 0.02,
-                              horizontal: width * 0.02,
-                            ),
-                            width: width,
-                            height: height * 0.56,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ContactDataWidget(
-                                  width: width,
-                                  height: height,
-                                  contactImage: contactImage,
-                                  userName: userName,
-                                  userEmail: userEmail,
-                                  userPhone: userPhone,
-                                  setModalState: setModalState,
-                                  pickImage: (setModalState) async {
-                                    await pickImage(setModalState);
-                                  },
-                                ),
-                                CustomTextField(
-                                  textHint: 'user Name',
-                                  inputText: userNameController,
-                                  text: (textFieldVal) => updateText(
-                                    textFieldVal,
-                                    (text) => userName = text,
-                                    setModalState,
-                                  ),
-                                ),
-                                SizedBox(height: height * 0.01),
-                                CustomTextField(
-                                  textHint: 'example@email.com',
-                                  inputText: userEmailController,
-                                  text: (textFieldVal) => updateText(
-                                    textFieldVal,
-                                    (text) => userEmail = text,
-                                    setModalState,
-                                  ),
-                                ),
-                                SizedBox(height: height * 0.01),
-                                CustomTextField(
-                                  textHint: '+200000000000',
-                                  inputText: userPhoneController,
-                                  text: (textFieldVal) => updateText(
-                                    textFieldVal,
-                                    (text) => userPhone = text,
-                                    setModalState,
-                                  ),
-                                ),
-                                SizedBox(height: height * 0.02),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    addContact(
-                                      userName: userNameController.text,
-                                      userEmail: userEmailController.text,
-                                      userPhone: userPhoneController.text,
-                                      userImage: contactImage!,
-                                    );
-                                    setState(() {});
-
-                                    Navigator.pop(context);
-                                    userNameController.clear();
-                                    userEmailController.clear();
-                                    userEmailController.clear();
-                                    userName = '';
-                                    userEmail = '';
-                                    userPhone = '';
-                                    contactImage = null;
-                                  },
-                                  child: const Text('Enter user'),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
+                modalSheet(
+                  context,
+                  height,
+                  width,
+                  userNameController,
+                  userEmailController,
+                  userPhoneController,
                 );
               },
               backgroundColor: AppColors.primaryColor,
@@ -207,6 +122,109 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: height * 0.01),
         ],
       ),
+    );
+  }
+
+  Future<dynamic> modalSheet(
+    BuildContext context,
+    double height,
+    double width,
+    TextEditingController userNameController,
+    TextEditingController userEmailController,
+    TextEditingController userPhoneController,
+  ) {
+    return showModalBottomSheet(
+      backgroundColor: AppColors.backgroundColor,
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: StatefulBuilder(
+            builder: (context, setModalState) {
+              return Container(
+                margin: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                padding: EdgeInsets.symmetric(
+                  vertical: height * 0.02,
+                  horizontal: width * 0.02,
+                ),
+                width: width,
+                height: height * 0.56,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ContactDataWidget(
+                      width: width,
+                      height: height,
+                      contactImage: contactImage,
+                      userName: userName,
+                      userEmail: userEmail,
+                      userPhone: userPhone,
+                      setModalState: setModalState,
+                      pickImage: (setModalState) async {
+                        await pickImage(setModalState);
+                      },
+                    ),
+                    CustomTextField(
+                      textHint: 'user Name',
+                      inputText: userNameController,
+                      text: (textFieldVal) => updateText(
+                        textFieldVal,
+                        (text) => userName = text,
+                        setModalState,
+                      ),
+                    ),
+                    SizedBox(height: height * 0.01),
+                    CustomTextField(
+                      textHint: 'example@email.com',
+                      inputText: userEmailController,
+                      text: (textFieldVal) => updateText(
+                        textFieldVal,
+                        (text) => userEmail = text,
+                        setModalState,
+                      ),
+                    ),
+                    SizedBox(height: height * 0.01),
+                    CustomTextField(
+                      textHint: '+200000000000',
+                      inputText: userPhoneController,
+                      text: (textFieldVal) => updateText(
+                        textFieldVal,
+                        (text) => userPhone = text,
+                        setModalState,
+                      ),
+                    ),
+                    SizedBox(height: height * 0.02),
+                    ElevatedButton(
+                      onPressed: () {
+                        addContact(
+                          userName: userNameController.text,
+                          userEmail: userEmailController.text,
+                          userPhone: userPhoneController.text,
+                          userImage: contactImage!,
+                        );
+                        setState(() {});
+
+                        Navigator.pop(context);
+                        userNameController.clear();
+                        userEmailController.clear();
+                        userEmailController.clear();
+                        userName = '';
+                        userEmail = '';
+                        userPhone = '';
+                        contactImage = null;
+                      },
+                      child: const Text('Enter user'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
